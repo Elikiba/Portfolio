@@ -860,7 +860,7 @@ section.visible {
 /* For tablets */
 @media (max-width: 992px) {
     .empty {
-        height: 9vh;
+        height: 10vh;
     }
 }
 
@@ -874,7 +874,7 @@ section.visible {
 /* For very small mobile devices */
 @media (max-width: 480px) {
     .empty {
-        height: 3vh;
+        height: 4vh;
     }
 }
    
