@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elikiba | Award-Winning Frontend Developer & UI Designer</title>
+    <meta
+      name="description"
+      content="Professional portfolio of Elikiba - Creative frontend developer and UI designer specializing in responsive web design, JavaScript frameworks, and user experience optimization. Based in Lagos, Nigeria."
+    />
+    <meta
+      name="keywords"
+      content="frontend developer, UI designer, web designer, designer, developer, web developer, portfolio, JavaScript, React, HTML5, CSS3, responsive design"
+    />
+    <meta name="author" content="Elikiba" />
+    <meta
+      property="og:title"
+      content="Elikiba | Frontend Developer & UI Designer"
+    />
+    <meta
+      property="og:description"
+      content="Professional portfolio showcasing innovative web development and design projects"
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Parkinsans:wght@300..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Video Background -->
+    <video autoplay loop muted playsinline class="video-background">
+      <source src="particles.mp4" type="video/mp4" />
+      <img src="sky.jpg" alt="Background fallback" loading="lazy" />
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <header>
+      <!-- Navbar -->
+      <nav id="navbar">
+        <a href="#" class="logo"> Elik<span class="name">iba</span>&trade; </a>
+
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#works">Works</a>
+          <a href="#contact">Contact</a>
+          <a href="#testimonials">Testimonials</a>
+        </div>
+
+        <div class="social-links">
+          <a
+            href="https://github.com/elikiba"
+            target="_blank"
+            aria-label="GitHub Profile"
+            class="social-icon"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a
+            href="https://linkedin.com/in/elikiba"
+            target="_blank"
+            aria-label="LinkedIn Profile"
+            class="social-icon"
+            ><i class="fab fa-linkedin"></i
+          ></a>
+          <a href="tel:+2347086137054" aria-label="Call Me" class="social-icon"
+            ><i class="fas fa-phone"></i
+          ></a>
+        </div>
+
+        <button class="menu-toggle" aria-label="Toggle Navigation Menu">
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Hello, I'm <span class="name">Ais</span>osa</h1>
+          <h2>Frontend Developer &nbsp;&lt;/&gt;&nbsp; UI Designer</h2>
+          <p>
+            I create beautiful, responsive, and user-friendly websites that
+            deliver exceptional user experiences. With a keen eye for design and
+            a passion for clean code, I help companies 10x their turnover, by
+            bringing ideas to life from the digital space into the real world.
+          </p>
+          <div class="hero-buttons">
+            <a href="#works" class="hero-btn btn-ripple">View My Work</a>
+            <a
+              href="https://example.com/resume.pdf"
+              target="_blank"
+              class="resume-btn btn-ripple"
+            >
+              <i class="fas fa-download"></i> Download Resume
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="about" id="about">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-content">
+          <div class="about-text">
+            <p>
+              I'm a passionate frontend developer based in Lagos, Nigeria, with
+              expertise in creating modern, responsive websites and web
+              applications. My journey in web development began with a curiosity
+              for how things work, which evolved into a of career creating
+              digital experiences that are both beautiful and functional.
+            </p>
+            <p>
+              I specialize in HTML5, CSS3, Tailwind and JavaScript (ES6+), and
+              modern frameworks like React. My approach combines technical
+              excellence with design sensibility, ensuring that every project
+              not only works flawlessly but also delivers an exceptional user
+              experience.
+            </p>
+            <p>
+              When I'm not coding nor exploring new design trends nor
+              contributing to open-source projects, you will either find me at
+              the fight gym, or at home reading an African history book.
+            </p>
+            <div class="skills">
+              <span class="skill">HTML5</span>
+              <span class="skill">CSS3</span>
+              <span class="skill">JavaScript</span>
+              <span class="skill">React</span>
+              <span class="skill">Tailwind</span>
+              <span class="skill">Git</span>
+              <span class="skill">UI/UX Design</span>
+              <span class="skill">Responsive Design</span>
+              <span class="skill">Web Performance</span>
+            </div>
+          </div>
+          <div class="about-image">
+            <img
+              src="Oma.jpg"
+              alt="Elikiba - Frontend Developer"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Works Section -->
+      <section class="works" id="works">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="works-grid">
+          <div class="work-item">
+            <img
+              src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
+              alt="E-commerce Website Project"
+              loading="lazy"
+            />
+            <div class="work-info">
+              <h3>E-commerce Platform</h3>
+              <p>
+                Full-featured online store with cart functionality and payment
+                integration
+              </p>
+            </div>
+            <a href="#" class="work-link" aria-label="View E-commerce Project"
+              ><i class="fas fa-external-link-alt"></i
+            ></a>
+          </div>
+
+          <div class="work-item">
+            <img
+              src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80"
+              alt="Portfolio Template Project"
+              loading="lazy"
+            />
+            <div class="work-info">
+              <h3>Portfolio Template</h3>
+              <p>Modern, customizable portfolio template for creatives</p>
+            </div>
+            <a href="#" class="work-link" aria-label="View Portfolio Template"
+              ><i class="fas fa-external-link-alt"></i
+            ></a>
+          </div>
+
+          <div class="work-item">
+            <img
+              src="Iriod.png"
+              alt="Iriod Global Logistics Website"
+              loading="lazy"
+            />
+            <div class="work-info">
+              <h3>Iriod Global Logistics</h3>
+              <p>Company website that increased client turnover by 65%</p>
+            </div>
+            <a
+              href="https://elikiba.github.io/Iroidglobal"
+              target="_blank"
+              class="work-link"
+              aria-label="View Iriod Global Project"
+              ><i class="fas fa-external-link-alt"></i
+            ></a>
+          </div>
+
+          <div class="work-item">
+            <img
+              src="https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1436&q=80"
+              alt="Mobile App Landing Page"
+              loading="lazy"
+            />
+            <div class="work-info">
+              <h3>Mobile App Landing</h3>
+              <p>High-conversion landing page for mobile application</p>
+            </div>
+            <a href="#" class="work-link" aria-label="View Mobile App Project"
+              ><i class="fas fa-external-link-alt"></i
+            ></a>
+          </div>
+
+          <div class="work-item empty-project">
+            <div class="empty-project-content">
+              <h3>Coming soon</h3>
+              <p>My next amazing project - Yours! Get in touch ⬇️</p>
+            </div>
+            <a
+              href="#contact"
+              class="work-link"
+              aria-label="View my next project"
+              ><i class="fas fa-external-link-alt"></i
+            ></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section class="testimonials" id="testimonials">
+        <h2 class="section-title">Client Testimonials</h2>
+        <div class="testimonials-container">
+          <div class="testimonial-item">
+            <div class="testimonial-content">
+              <i class="fas fa-quote-left quote-icon"></i>
+              <p class="testimonial-text">
+                Elikiba completely transformed our online presence with the
+                Iriod Global Logistics website. His attention to detail,
+                creative solutions, and technical expertise resulted in a 60%
+                increase in client inquiries within the first month. He's not
+                just a developer but a true partner in our digital growth.
+              </p>
+              <div class="testimonial-author">
+                <img
+                  src="sea.jpg"
+                  alt="CEO of Iriod Global & Logistics"
+                  loading="lazy"
+                  class="testimonial-avatar"
+                />
+                <div class="author-info">
+                  <h4>Gabriel Osareniro</h4>
+                  <p>CEO & Founder, Iriod Global & Logistics</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-item">
+            <div class="testimonial-content">
+              <i class="fas fa-quote-left quote-icon"></i>
+              <p class="testimonial-text">
+                [Space for YOUR testimonial, let's transform your business'
+                turnover.]
+              </p>
+              <div class="testimonial-author">
+                <img
+                  src="Face.jpeg"
+                  alt="Client Name"
+                  loading="lazy"
+                  class="testimonial-avatar"
+                />
+                <div class="author-info">
+                  <h4>[Your Name]</h4>
+                  <p>[Your Position], [Your Company Name]</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="contact" id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-container">
+          <div class="contact-info">
+            <h3>Let's Create Something Amazing</h3>
+            <p>
+              Have a project in mind or want to discuss potential opportunities?
+              I'm currently available for freelance work and full-time
+              positions. Feel free to reach out through any of these channels:
+            </p>
+            <div class="contact-details">
+              <div class="contact-detail">
+                <a href="mailto:ovenserisosa@gmail.com">
+                  <i class="fas fa-envelope"></i>
+                </a>
+                <span>Ovenserisosa@gmail.com</span>
+              </div>
+
+              <div class="contact-detail">
+                <a href="tel:+2347086137054"> <i class="fas fa-phone"></i></a>
+                <span>+234 708 613 7054</span>
+              </div>
+
+              <div class="contact-detail">
+                <a href="https://example.com/resume.pdf" target="_blank">
+                  <i class="fas fa-file-pdf"></i>
+                </a>
+                <span
+                  ><a href="https://example.com/resume.pdf" target="_blank"></a
+                  >View My Resume</span
+                >
+              </div>
+
+              <div class="contact-detail">
+                <a
+                  href="https://maps.google.com/?q=Lagos,+Nigeria"
+                  target="_blank"
+                >
+                  <i class="fas fa-map-marker-alt"></i
+                ></a>
+                <span>Lagos, Nigeria</span>
+              </div>
+            </div>
+            <div class="contact-social">
+              <a
+                href="https://wa.me/+2347086137054"
+                target="_blank"
+                aria-label="Chat with us on WhatsApp"
+                class="social-icon"
+                ><i class="fa-brands fa-whatsapp"></i
+              ></a>
+
+              <a
+                href="https://github.com/elikiba"
+                target="_blank"
+                aria-label="GitHub Profile"
+                class="social-icon"
+                ><i class="fab fa-github"></i
+              ></a>
+              <a
+                href="https://linkedin.com/in/elikiba"
+                target="_blank"
+                aria-label="LinkedIn Profile"
+                class="social-icon"
+                ><i class="fab fa-linkedin"></i
+              ></a>
+              <a
+                href="https://x.com/Ovenseri_AI"
+                target="_blank"
+                aria-label="Twitter Profile"
+                class="social-icon"
+                ><i class="fab fa-twitter"></i
+              ></a>
+            </div>
+          </div>
+          <div class="contact-form">
+            <form
+              id="clientForm"
+              aria-label="Contact Form"
+              action="submit"
+              method="POST"
+            >
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" required>
+                  <option value="">Select a subject</option>
+                  <option value="Project Inquiry">Project Inquiry</option>
+                  <option value="Job Opportunity">Job Opportunity</option>
+                  <option value="Collaboration">Collaboration</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="dynamic-fields"></div>
+              <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea
+                  id="message"
+                  placeholder="Tell me about your project..."
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" placeholder="Dara Obi" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="0708 434 5325"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Your Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="johnbello@gmail.com"
+                  required
+                />
+              </div>
+              <button type="submit" class="submit-btn btn-ripple">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!--  -->
+    <!-- empty -->
+    <div class="empty"></div>
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <a href="#" class="footer-logo">Aisosa</a>
+        <div class="footer-links">
+          <a aria-label="Blog" class="not-allowed">Blog 🔜</a>
+        </div>
+        <div class="social-icons">
+          <a
+            href="https://github.com/elikiba"
+            class="social-icon"
+            target="_blank"
+            aria-label="GitHub Profile"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a
+            href="https://linkedin.com/in/elikiba"
+            class="social-icon"
+            target="_blank"
+            aria-label="LinkedIn Profile"
+            ><i class="fab fa-linkedin"></i
+          ></a>
+          <a
+            href="mailto:ovenserisosa"
+            class="social-icon"
+            aria-label="Email Me"
+            ><i class="fas fa-envelope"></i
+          ></a>
+          <a
+            href="https://twitter.com/elikiba"
+            class="social-icon"
+            target="_blank"
+            aria-label="Twitter Profile"
+            ><i class="fab fa-twitter"></i
+          ></a>
+        </div>
+        <div class="footer-info">
+          <p>
+            © <span id="currentYear"></span>
+            <span class="name">Elikiba&trade;</span>. All rights reserved.
+          </p>
+          <p>Lagos, Nigeria</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to Top">
+      <i class="fas fa-arrow-up"></i>
+      <svg class="progress-circle" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="progress-circle-track" cx="25" cy="25" r="20" />
+        <circle class="progress-circle-fill" cx="25" cy="25" r="20" />
+      </svg>
+    </button>
+
+    <script src="script.js"></script>
+  </body>
+</html>
