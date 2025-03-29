@@ -857,12 +857,26 @@ section.visible {
     height: 15vh;
 }
 
-@media (max-width: 768px) {
+/* For tablets */
+@media (max-width: 992px) {
     .empty {
-        min-height: 5vh;
+        height: 10vh;
     }
 }
 
+/* For mobile devices */
+@media (max-width: 768px) {
+    .empty {
+        height: 5vh;
+    }
+}
+
+/* For very small mobile devices */
+@media (max-width: 480px) {
+    .empty {
+        height: 3vh;
+    }
+}
 footer {
     display: flex;
     justify-content: space-between;
