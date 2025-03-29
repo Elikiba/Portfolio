@@ -350,6 +350,13 @@ section.visible {
     transform: translateY(20px);
 }
 
+@media (max-width: 768px) {
+    .hero h2 {
+      white-space: normal;
+      display: inline-block;
+    }
+  }
+
 .hero p {
     font-size: 1.1rem;
     color: var(--light);
@@ -860,7 +867,7 @@ section.visible {
 /* For tablets */
 @media (max-width: 992px) {
     .empty {
-        height: 10vh;
+        height: 9vh;
     }
 }
 
@@ -877,7 +884,7 @@ section.visible {
         height: 4vh;
     }
 }
-   
+
 footer {
     display: flex;
     justify-content: space-between;
