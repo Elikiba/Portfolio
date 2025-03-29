@@ -860,21 +860,21 @@ section.visible {
 /* For tablets */
 @media (max-width: 992px) {
     .empty {
-        height: 8vh;
+        height: 9vh;
     }
 }
 
 /* For mobile devices */
 @media (max-width: 768px) {
     .empty {
-        height: 4vh;
+        height: 5vh;
     }
 }
 
 /* For very small mobile devices */
 @media (max-width: 480px) {
     .empty {
-        height: 2vh;
+        height: 3vh;
     }
 }
    
