@@ -71,7 +71,7 @@ body {
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--secondary), var(--primary));
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
     width: 0%;
     transition: width 0.1s ease;
 }
@@ -860,23 +860,24 @@ section.visible {
 /* For tablets */
 @media (max-width: 992px) {
     .empty {
-        height: 10vh;
+        height: 8vh;
     }
 }
 
 /* For mobile devices */
 @media (max-width: 768px) {
     .empty {
-        height: 5vh;
+        height: 4vh;
     }
 }
 
 /* For very small mobile devices */
 @media (max-width: 480px) {
     .empty {
-        height: 3vh;
+        height: 2vh;
     }
 }
+   
 footer {
     display: flex;
     justify-content: space-between;
