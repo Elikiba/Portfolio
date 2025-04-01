@@ -1,374 +1,563 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Set current year in footer
-    const yearElement = document.getElementById('currentYear');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
+// ======================
+// Firebase Configuration
+// ======================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-    
+const firebaseConfig = {
+  apiKey: "AIzaSyDt0xz7tycajvU3PHNoIQ6Jgs6h6ZBvLGE",
+  authDomain: "elikibaprtfolio.firebaseapp.com",
+  projectId: "elikibaprtfolio",
+  storageBucket: "elikibaprtfolio.appspot.com",
+  messagingSenderId: "185552597230",
+  appId: "1:185552597230:web:57af44ea255bf6895903ff"
+};
 
-    // Custom Cursor - more visible
-    const cursor = document.querySelector('.cursor');
-    const cursorFollower = document.querySelector('.cursor-follower');
-    
-    if (cursor && cursorFollower) {
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.display = 'block';
-            cursorFollower.style.display = 'block';
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
-            cursorFollower.style.left = `${e.clientX}px`;
-            cursorFollower.style.top = `${e.clientY}px`;
-        });
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-        // Hide cursor initially
-        cursor.style.display = 'none';
-        cursorFollower.style.display = 'none';
+// ======================
+// DOM Elements
+// ======================
+const elements = {
+  year: document.getElementById('currentYear'),
+  cursor: document.querySelector('.cursor'),
+  cursorFollower: document.querySelector('.cursor-follower'),
+  menuToggle: document.querySelector('.menu-toggle'),
+  navLinks: document.querySelector('.nav-links'),
+  videoBg: document.querySelector('.video-background'),
+  progressBar: document.querySelector('.progress-bar'),
+  scrollToTopBtn: document.querySelector('.scroll-to-top'),
+  progressCircleFill: document.querySelector('.progress-circle-fill'),
+  contactForm: document.getElementById('clientForm'),
+  dynamicFieldContainer: document.querySelector('.dynamic-fields'),
+  testimonialItems: document.querySelectorAll('.testimonial-item'),
+  skillElements: document.querySelectorAll('.skill')
+};
 
-        // Cursor hover effects - more contrast
-        const hoverElements = document.querySelectorAll('a, button, .work-item, input, textarea, select, .social-icon');
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
-                cursor.style.backgroundColor = 'rgba(161, 141, 8, 0.9)';
-                cursor.style.borderColor = 'var(--dark)';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                cursorFollower.style.borderColor = 'var(--primary)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursor.style.backgroundColor = 'rgba(160, 139, 6, 0.8)';
-                cursor.style.borderColor = 'var(--dark)';
-                cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        });
-    }
+// ======================
+// Utility Functions
+// ======================
+const utils = {
+  setCurrentYear: () => {
+    if (elements.year) elements.year.textContent = new Date().getFullYear();
+  },
 
-    // Mobile menu toggle - fixed above everything
-    const menuToggle = document.querySelector('.menu-toggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.querySelector('.nav-links').classList.toggle('active');
-        });
-    }
-
-    // Close menu when clicking a link - ensure clickable
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            // Don't prevent default for resume link
-            if (!link.href.includes('resume.pdf')) {
-                e.preventDefault();
-                const target = document.querySelector(link.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-            document.querySelector('.nav-links').classList.remove('active');
-            document.querySelector('.menu-toggle').classList.remove('active');
-        });
-    });
-
-    // Resume link tracking
-    document.querySelectorAll('a[href*="resume.pdf"]').forEach(link => {
-        link.addEventListener('click', () => {
-            console.log('Resume downloaded');
-            // You can add analytics tracking here
-        });
-    });
-
-    // Video Background - Slow playback
-    const videoBg = document.querySelector('.video-background');
-    if (videoBg) {
-        videoBg.playbackRate = 0.7;
-        videoBg.addEventListener('error', function() {
-            document.body.style.background = 'radial-gradient(circle, #2a0845 0%, #1a0630 100%)';
-        });
-    }
-
-    // Scroll progress indicator
-    const progressBar = document.querySelector('.progress-bar');
-    if (progressBar) {
-        window.addEventListener('scroll', function() {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrollProgress = (scrollTop / scrollHeight) * 100;
-            progressBar.style.width = scrollProgress + '%';
-        });
-    }
-
-    // Scroll to top button - always visible
-    const scrollToTopBtn = document.querySelector('.scroll-to-top');
-    const progressCircleFill = document.querySelector('.progress-circle-fill');
-    
-    if (scrollToTopBtn && progressCircleFill) {
-        scrollToTopBtn.classList.add('visible');
-        
-        window.addEventListener('scroll', function() {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrollProgress = (scrollTop / scrollHeight) * 100;
-            
-            // Update circle progress
-            const offset = 126 - (126 * scrollProgress / 100);
-            progressCircleFill.style.strokeDashoffset = offset;
-        });
-
-        scrollToTopBtn.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
-
-    // Section animations - sliding effect
-    const sections = document.querySelectorAll('section');
-    const observerOptions = {
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-
-    // Button ripple effects
-    document.querySelectorAll('.hero-btn, .resume-btn, .submit-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const x = e.clientX - e.target.getBoundingClientRect().left;
-            const y = e.clientY - e.target.getBoundingClientRect().top;
-            
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple');
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-
-    // Dynamic form
-    const contactForm = document.getElementById('clientForm');
-    if (contactForm) {
-        const subjectField = contactForm.querySelector('#subject');
-        const dynamicFieldContainer = contactForm.querySelector('.dynamic-fields');
-
-        subjectField.addEventListener('change', function() {
-            dynamicFieldContainer.innerHTML = '';
-            
-            if (this.value === 'Project Inquiry') {
-                const projectTypeField = document.createElement('div');
-                projectTypeField.className = 'form-group';
-                projectTypeField.innerHTML = `
-                    <label for="projectType">Project Type</label>
-                    <select id="projectType" name="projectType" required>
-                        <option value="">Select project type</option>
-                        <option value="Website Development">Website Development</option>
-                        <option value="Web Application">Web Application</option>
-                        <option value="UI/UX Design">UI/UX Design</option>
-                        <option value="E-commerce">E-commerce</option>
-                        <option value="Other">Other</option>
-                    </select>
-                `;
-                dynamicFieldContainer.appendChild(projectTypeField);
-
-                const budgetField = document.createElement('div');
-                budgetField.className = 'form-group';
-                budgetField.innerHTML = `
-                    <label for="budget">Project Budget (USD)</label>
-                    <select id="budget" name="budget" required>
-                        <option value="">Select budget range</option>
-                        <option value="300-500">$300 - $500</option>
-                        <option value="500-1000">$500 - $1,000</option>
-                        <option value="1000-5000">$1,000 - $5,000</option>
-                        <option value="5000+">$5,000+</option>
-                        <option value="undecided">Undecided</option>
-                    </select>
-                `;
-                dynamicFieldContainer.appendChild(budgetField);
-                
-                const timelineField = document.createElement('div');
-                timelineField.className = 'form-group';
-                timelineField.innerHTML = `
-                    <label for="timeline">Project Timeline</label>
-                    <select id="timeline" name="timeline" required>
-                        <option value="">Select timeline</option>
-                        <option value="1-2 weeks">1-2 weeks</option>
-                        <option value="1 month">1 month</option>
-                        <option value="2-3 months">2-3 months</option>
-                        <option value="3+ months">3+ months</option>
-                        <option value="flexible">Flexible</option>
-                    </select>
-                `;
-                dynamicFieldContainer.appendChild(timelineField);
-            } 
-            else if (this.value === 'Job Opportunity') {
-                const positionField = document.createElement('div');
-                positionField.className = 'form-group';
-                positionField.innerHTML = `
-                    <label for="position">Position Type</label>
-                    <select id="position" name="position" required>
-                        <option value="">Select position type</option>
-                        <option value="Full-time">Full-time</option>
-                        <option value="Part-time">Part-time</option>
-                        <option value="Contract">Contract</option>
-                        <option value="Freelance">Freelance</option>
-                        <option value="Internship">Internship</option>
-                    </select>
-                `;
-                dynamicFieldContainer.appendChild(positionField);
-
-                const companyField = document.createElement('div');
-                companyField.className = 'form-group';
-                companyField.innerHTML = `
-                    <label for="company">Company Name</label>
-                    <input type="text" id="company" name="company" placeholder="Your company name" required>
-                `;
-                dynamicFieldContainer.appendChild(companyField);
-            }
-            else if (this.value === 'Collaboration') {
-                const collabTypeField = document.createElement('div');
-                collabTypeField.className = 'form-group';
-                collabTypeField.innerHTML = `
-                    <label for="collabType">Collaboration Type</label>
-                    <select id="collabType" name="collabType" required>
-                        <option value="">Select collaboration type</option>
-                        <option value="Open Source">Open Source Project</option>
-                        <option value="Design Partnership">Design Partnership</option>
-                        <option value="Development Partnership">Development Partnership</option>
-                        <option value="Other">Other</option>
-                    </select>
-                `;
-                dynamicFieldContainer.appendChild(collabTypeField);
-
-                const detailsField = document.createElement('div');
-                detailsField.className = 'form-group';
-                detailsField.innerHTML = `
-                    <label for="collabDetails">Collaboration Details</label>
-                    <textarea id="collabDetails" name="collabDetails" placeholder="Tell me more about the collaboration..." required></textarea>
-                `;
-                dynamicFieldContainer.appendChild(detailsField);
-            }
-            else if (this.value === 'Other') {
-                const otherField = document.createElement('div');
-                otherField.className = 'form-group';
-                otherField.innerHTML = `
-                    <label for="otherDetails">Please specify</label>
-                    <input type="text" id="otherDetails" name="otherDetails" placeholder="What would you like to discuss?" required>
-                `;
-                dynamicFieldContainer.appendChild(otherField);
-            }
-        });
-
-        // Form submission
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Create form data object
-            const formData = {
-                subject: this.subject.value,
-                name: this.name.value,
-                phone: this.phone.value,
-                email: this.email.value,
-                message: this.message.value
-            };
-
-            // Add dynamic fields to form data
-            const dynamicFields = this.querySelectorAll('.dynamic-fields input, .dynamic-fields select, .dynamic-fields textarea');
-            dynamicFields.forEach(field => {
-                formData[field.name] = field.value;
-            });
-
-            // Here you would typically send the form data to a server
-            console.log('Form submitted:', formData);
-            
-            // Show success message
-            alert('Thank you for your message! I will get back to you soon.');
-            
-            // Reset form
-            this.reset();
-            dynamicFieldContainer.innerHTML = '';
-        });
-    }
-
-    // Fix for social links in navbar
-    document.querySelectorAll('.social-links a, .contact-social a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Allow default link behavior
-        });
-    });
-});
-
-// Testimonials
-const testimonialItems = document.querySelectorAll('.testimonial-item');
-testimonialItems.forEach((item, index) => {
-  item.style.transitionDelay = `${index * 0.1}s`;
-});
-
-const sections = document.querySelectorAll('section, .testimonials');
-
-document.querySelector('a[download="Elikiba.pdf"]').addEventListener('click', function() {
-    // Google Analytics
+  trackEvent: (category, action, label) => {
     if (typeof gtag !== 'undefined') {
-      gtag('event', 'download', {
-        'event_category': 'Resume',
-        'event_label': this.getAttribute('download') // Automatically uses the filename
-      });
+      gtag('event', action, { event_category: category, event_label: label });
     }
+  },
+
+  createSuccessMessage: () => {
+    const successMessage = document.createElement('div');
+    successMessage.className = 'success-message';
+    successMessage.style.display = 'none';
+    successMessage.innerHTML = `
+      <div class="success-content">
+        <i class="fas fa-check-circle"></i>
+        <span>Your message has been sent successfully! I'll get back to you soon.</span>
+      </div>
+    `;
+    return successMessage;
+  },
+
+  showSuccessMessage: (messageElement, formElement) => {
+    // Remove any existing messages
+    const existingMessages = formElement.querySelectorAll('.success-message');
+    existingMessages.forEach(msg => msg.remove());
     
-    // Local storage tracking
+    // Add and display new message
+    formElement.insertBefore(messageElement, formElement.firstChild);
+    messageElement.style.display = 'block';
+    
+    // Animate in
+    setTimeout(() => {
+      messageElement.style.opacity = '1';
+      messageElement.style.transform = 'translateY(0)';
+    }, 10);
+
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      messageElement.style.opacity = '0';
+      messageElement.style.transform = 'translateY(-10px)';
+      setTimeout(() => messageElement.remove(), 300);
+    }, 5000);
+  }
+};
+
+// ======================
+// Cursor Control
+// ======================
+const cursor = {
+  init: () => {
+    if (!elements.cursor || !elements.cursorFollower) return;
+
+    elements.cursor.style.display = 'none';
+    elements.cursorFollower.style.display = 'none';
+
+    document.addEventListener('mousemove', cursor.handleMouseMove);
+
+    const hoverElements = document.querySelectorAll(
+      'a, button, .work-item, input, textarea, select, .social-icon'
+    );
+    hoverElements.forEach(el => {
+      el.addEventListener('mouseenter', cursor.handleHoverEnter);
+      el.addEventListener('mouseleave', cursor.handleHoverLeave);
+    });
+  },
+
+  handleMouseMove: (e) => {
+    elements.cursor.style.display = 'block';
+    elements.cursorFollower.style.display = 'block';
+    elements.cursor.style.left = `${e.clientX}px`;
+    elements.cursor.style.top = `${e.clientY}px`;
+    elements.cursorFollower.style.left = `${e.clientX}px`;
+    elements.cursorFollower.style.top = `${e.clientY}px`;
+  },
+
+  handleHoverEnter: () => {
+    elements.cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
+    elements.cursor.style.backgroundColor = 'rgba(161, 141, 8, 0.9)';
+    elements.cursor.style.borderColor = 'var(--dark)';
+    elements.cursorFollower.style.transform = 'translate(-50%, -50%) scale(0.8)';
+    elements.cursorFollower.style.borderColor = 'var(--primary)';
+  },
+
+  handleHoverLeave: () => {
+    elements.cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    elements.cursor.style.backgroundColor = 'rgba(160, 139, 6, 0.8)';
+    elements.cursor.style.borderColor = 'var(--dark)';
+    elements.cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+  }
+};
+
+// ======================
+// Navigation
+// ======================
+const navigation = {
+  init: () => {
+    if (elements.menuToggle) {
+      elements.menuToggle.addEventListener('click', navigation.toggleMenu);
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', navigation.handleNavLinkClick);
+    });
+
+    document.querySelectorAll('a[href*="resume.pdf"]').forEach(link => {
+      link.addEventListener('click', navigation.trackResumeDownload);
+    });
+  },
+
+  toggleMenu: function() {
+    this.classList.toggle('active');
+    elements.navLinks.classList.toggle('active');
+  },
+
+  handleNavLinkClick: (e) => {
+    if (!e.currentTarget.href.includes('resume.pdf')) {
+      e.preventDefault();
+      const target = document.querySelector(e.currentTarget.getAttribute('href'));
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    }
+    elements.navLinks.classList.remove('active');
+    document.querySelector('.menu-toggle').classList.remove('active');
+  },
+
+  trackResumeDownload: function() {
+    utils.trackEvent('PDF', 'download', this.getAttribute('download'));
     const downloadCount = parseInt(localStorage.getItem('resumeDownloads') || 0) + 1;
     localStorage.setItem('resumeDownloads', downloadCount);
-    
-    console.log(`Download tracked! Total: ${downloadCount}`);
-  });
+  }
+};
 
-  // Track Resume Downloads
-document.querySelector('a[download*="Elikiba.pdf"]').addEventListener('click', function() {
-    gtag('event', 'download', {
-      'event_category': 'PDF',
-      'event_label': this.getAttribute('download') // e.g., "Aisosa_Resume.pdf"
-    });
-  });
-  
-  // Track External Links (GitHub, LinkedIn, etc.)
-  document.querySelectorAll('a[href^="http"]:not([href*="elikiba.github.io"])').forEach(link => {
-    link.addEventListener('click', function() {
-      gtag('event', 'outbound_click', {
-        'event_category': 'Outbound',
-        'event_label': this.href
-      });
-    });
-  });
-
-  document.getElementById('clientForm').addEventListener('submit', function() {
-    gtag('event', 'form_submit', {
-      'event_category': 'Contact',
-      'event_label': 'Portfolio Contact Form'
-    });
-  });
-
-  window.addEventListener('scroll', function() {
-    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-    if (scrollPercent > 25) {
-      gtag('event', 'scroll', {
-        'event_category': 'Engagement',
-        'event_label': '25% Scroll Depth'
-      });
+// ======================
+// Scroll Effects
+// ======================
+const scrollEffects = {
+  init: () => {
+    if (elements.progressBar) {
+      window.addEventListener('scroll', scrollEffects.updateProgressBar);
     }
-  });
+
+    if (elements.scrollToTopBtn && elements.progressCircleFill) {
+      elements.scrollToTopBtn.classList.add('visible');
+      window.addEventListener('scroll', scrollEffects.updateScrollProgress);
+      elements.scrollToTopBtn.addEventListener('click', scrollEffects.scrollToTop);
+    }
+
+    scrollEffects.setupIntersectionObserver();
+  },
+
+  updateProgressBar: () => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollProgress = (scrollTop / scrollHeight) * 100;
+    elements.progressBar.style.width = scrollProgress + '%';
+  },
+
+  updateScrollProgress: () => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollProgress = (scrollTop / scrollHeight) * 100;
+    const offset = 126 - (126 * scrollProgress / 100);
+    elements.progressCircleFill.style.strokeDashoffset = offset;
+  },
+
+  scrollToTop: () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  },
+
+  setupIntersectionObserver: () => {
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  }
+};
+
+// ======================
+// Form Handling
+// ======================
+const formHandler = {
+  fieldTemplates: {
+    'Project Inquiry': `
+      <div class="form-group">
+        <label for="projectType">Project Type</label>
+        <select id="projectType" name="projectType" required>
+          <option value="">Select project type</option>
+          <option value="Website Development">Website Development</option>
+          <option value="Web Application">Web Application</option>
+          <option value="UI/UX Design">UI/UX Design</option>
+          <option value="E-commerce">E-commerce</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="budget">Project Budget (USD)</label>
+        <select id="budget" name="budget" required>
+          <option value="">Select budget range</option>
+          <option value="300-500">$300 - $500</option>
+          <option value="500-1000">$500 - $1,000</option>
+          <option value="1000-5000">$1,000 - $5,000</option>
+          <option value="5000+">$5,000+</option>
+          <option value="undecided">Undecided</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="timeline">Project Timeline</label>
+        <select id="timeline" name="timeline" required>
+          <option value="">Select timeline</option>
+          <option value="1-2 weeks">1-2 weeks</option>
+          <option value="1 month">1 month</option>
+          <option value="2-3 months">2-3 months</option>
+          <option value="3+ months">3+ months</option>
+          <option value="flexible">Flexible</option>
+        </select>
+      </div>
+    `,
+    'Job Opportunity': `
+      <div class="form-group">
+        <label for="position">Position Type</label>
+        <select id="position" name="position" required>
+          <option value="">Select position type</option>
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Contract">Contract</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Internship">Internship</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="company">Company Name</label>
+        <input type="text" id="company" name="company" placeholder="Your company name" required>
+      </div>
+    `,
+    'Collaboration': `
+      <div class="form-group">
+        <label for="collabType">Collaboration Type</label>
+        <select id="collabType" name="collabType" required>
+          <option value="">Select collaboration type</option>
+          <option value="Open Source">Open Source Project</option>
+          <option value="Design Partnership">Design Partnership</option>
+          <option value="Development Partnership">Development Partnership</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="collabDetails">Collaboration Details</label>
+        <textarea id="collabDetails" name="collabDetails" placeholder="Tell me more about the collaboration..." required></textarea>
+      </div>
+    `,
+    'Other': `
+      <div class="form-group">
+        <label for="otherDetails">Please specify</label>
+        <input type="text" id="otherDetails" name="otherDetails" placeholder="What would you like to discuss?" required>
+      </div>
+    `
+  },
+
+  init: () => {
+    if (!elements.contactForm) return;
+
+    const subjectField = elements.contactForm.querySelector('#subject');
+    if (subjectField) {
+      subjectField.addEventListener('change', formHandler.updateDynamicFields);
+    }
+
+    elements.contactForm.addEventListener('submit', formHandler.handleSubmit);
+    formHandler.setupValidation();
+  },
+
+  updateDynamicFields: function() {
+    elements.dynamicFieldContainer.innerHTML = '';
+    if (formHandler.fieldTemplates[this.value]) {
+      elements.dynamicFieldContainer.innerHTML = formHandler.fieldTemplates[this.value];
+    }
+  },
+
+  setupValidation: () => {
+    const fields = {
+      name: { element: elements.contactForm.querySelector('#name'), errorId: 'nameError', validator: formHandler.validateName },
+      email: { element: elements.contactForm.querySelector('#email'), errorId: 'emailError', validator: formHandler.validateEmail },
+      phone: { element: elements.contactForm.querySelector('#phone'), errorId: 'phoneError', validator: formHandler.validatePhone },
+      message: { element: elements.contactForm.querySelector('#message'), errorId: 'messageError', validator: formHandler.validateMessage },
+      subject: { element: elements.contactForm.querySelector('#subject'), errorId: 'subjectError', validator: formHandler.validateSubject }
+    };
+
+    Object.values(fields).forEach(({ element, errorId, validator }) => {
+      if (element) {
+        element.addEventListener('blur', () => formHandler.validateField(element, errorId, validator));
+        element.addEventListener('input', () => formHandler.validateField(element, errorId, validator));
+      }
+    });
+  },
+
+  validateAllFields: () => {
+    const fields = [
+      { element: elements.contactForm.querySelector('#name'), errorId: 'nameError', validator: formHandler.validateName },
+      { element: elements.contactForm.querySelector('#email'), errorId: 'emailError', validator: formHandler.validateEmail },
+      { element: elements.contactForm.querySelector('#phone'), errorId: 'phoneError', validator: formHandler.validatePhone },
+      { element: elements.contactForm.querySelector('#message'), errorId: 'messageError', validator: formHandler.validateMessage },
+      { element: elements.contactForm.querySelector('#subject'), errorId: 'subjectError', validator: formHandler.validateSubject }
+    ];
+
+    let isValid = true;
+    fields.forEach(({ element, errorId, validator }) => {
+      if (!formHandler.validateField(element, errorId, validator)) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      const firstError = document.querySelector('.invalid');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+    }
+
+    return isValid;
+  },
+
+  validateField: (field, errorId, validationFn) => {
+    const errorElement = document.getElementById(errorId);
+    const isValid = validationFn(field.value);
+    
+    if (!isValid) {
+      field.classList.add('invalid');
+      field.classList.remove('valid');
+      return false;
+    } else {
+      field.classList.remove('invalid');
+      field.classList.add('valid');
+      if (errorElement) errorElement.textContent = '';
+      return true;
+    }
+  },
+
+  validateName: (value) => {
+    if (value.trim().length < 2) {
+      document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
+      return false;
+    }
+    return true;
+  },
+
+  validateEmail: (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      document.getElementById('emailError').textContent = 'Please enter a valid email address';
+      return false;
+    }
+    return true;
+  },
+
+  validatePhone: (value) => {
+    const phoneRegex = /^[0-9]{10,15}$/;
+    if (!phoneRegex.test(value)) {
+      document.getElementById('phoneError').textContent = 'Please enter 10-15 digit phone number';
+      return false;
+    }
+    return true;
+  },
+
+  validateMessage: (value) => {
+    if (value.trim().length < 20) {
+      document.getElementById('messageError').textContent = 'Message should be at least 20 characters';
+      return false;
+    }
+    return true;
+  },
+
+  validateSubject: (value) => {
+    if (!value) {
+      document.getElementById('subjectError').textContent = 'Please select a subject';
+      return false;
+    }
+    return true;
+  },
+
+  handleSubmit: async function(e) {
+    e.preventDefault();
+    
+    if (!formHandler.validateAllFields()) return;
+
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text').textContent = 'Sending...';
+    submitBtn.querySelector('.spinner').classList.remove('hidden');
+
+    try {
+      const formData = {
+        name: this.name.value,
+        email: this.email.value,
+        phone: this.phone.value,
+        message: this.message.value,
+        subject: this.subject.value,
+        timestamp: new Date()
+      };
+
+      this.querySelectorAll('.dynamic-fields input, .dynamic-fields select, .dynamic-fields textarea').forEach(field => {
+        formData[field.name] = field.value;
+      });
+
+      await addDoc(collection(db, "submissions"), formData);
+      utils.trackEvent('Contact', 'submit', 'Portfolio Form');
+      
+      const successMessage = utils.createSuccessMessage();
+      utils.showSuccessMessage(successMessage, this);
+      
+      this.reset();
+      elements.dynamicFieldContainer.innerHTML = '';
+      
+      this.querySelectorAll('.form-group input, .form-group textarea, .form-group select').forEach(field => {
+        field.classList.remove('valid', 'invalid');
+      });
+
+    } catch (error) {
+      console.error("Error saving message:", error);
+      alert("Failed to send message. Please email me directly at ovenserisosa@gmail.com");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.btn-text').textContent = 'Send Message';
+      submitBtn.querySelector('.spinner').classList.add('hidden');
+    }
+  }
+};
+
+// ======================
+// Ripple Effects
+// ======================
+const rippleEffects = {
+  init: () => {
+    document.querySelectorAll('.hero-btn, .resume-btn, .submit-btn').forEach(btn => {
+      btn.addEventListener('click', rippleEffects.createRipple);
+    });
+  },
+
+  createRipple: function(e) {
+    const x = e.clientX - e.target.getBoundingClientRect().left;
+    const y = e.clientY - e.target.getBoundingClientRect().top;
+    
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    this.appendChild(ripple);
+    
+    setTimeout(() => ripple.remove(), 600);
+  }
+};
+
+// ======================
+// Video Background
+// ======================
+const videoBackground = {
+  init: () => {
+    if (!elements.videoBg) return;
+    
+    elements.videoBg.playbackRate = 0.7;
+    elements.videoBg.addEventListener('error', videoBackground.handleVideoError);
+  },
+
+  handleVideoError: () => {
+    document.body.style.background = 'radial-gradient(circle, #2a0845 0%, #1a0630 100%)';
+  }
+};
+
+// ======================
+// Testimonials
+// ======================
+const testimonials = {
+  init: () => {
+    elements.testimonialItems.forEach((item, index) => {
+      item.style.transitionDelay = `${index * 0.1}s`;
+    });
+  }
+};
+
+// ======================
+// Skills Initialization
+// ======================
+const skills = {
+  init: () => {
+    elements.skillElements.forEach(skill => {
+      const level = skill.getAttribute('data-level');
+      skill.style.setProperty('--skill-level', `${level}%`);
+    });
+  }
+};
+
+// ======================
+// Initialize Everything
+// ======================
+document.addEventListener('DOMContentLoaded', () => {
+  utils.setCurrentYear();
+  cursor.init();
+  navigation.init();
+  scrollEffects.init();
+  formHandler.init();
+  rippleEffects.init();
+  videoBackground.init();
+  testimonials.init();
+  skills.init();
+});
