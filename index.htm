@@ -9,6 +9,11 @@
   <meta name="description" content="Best web designer in Nigeria ✅ 5+ years experience building high-converting websites & apps. Specializing in UI/UX design, frontend development (React, JavaScript) for businesses in Lagos & Benin City. Contact for a free consultation today!">
   <meta name="keywords" content="web designer nigeria, lagos web developer, benin city ui designer, frontend developer nigeria, best web designer in lagos, affordable website design nigeria">
   
+  <!-- Preload critical resources -->
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="preload" href="script.js" as="script">
+  <link rel="preload" href="particles.mp4" as="video">
+  
   <!-- Geo & Business Meta -->
   <meta name="geo.region" content="NG-LA">
   <meta name="geo.placename" content="Lagos, Benin City">
@@ -233,7 +238,85 @@
               contributing to open-source projects, you will either find me at
               the fight gym, or at home reading an African history book.
             </p>
+
             <div class="skills">
+              <div class="skill" data-level="95">
+                <span>HTML5</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="90">
+                <span>CSS3</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="85">
+                <span>JavaScript</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="80">
+                <span>React</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="85">
+                <span>Tailwind</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="75">
+                <span>Git</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="85">
+                <span>UI/UX Design</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="90">
+                <span>Responsive Design</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="skill" data-level="80">
+                <span>Web Performance</span>
+                <div class="skill-container">
+                  <div class="skill-bar">
+                    <div class="skill-progress"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            <!-- <div class="skills">
               <span class="skill">HTML5</span>
               <span class="skill">CSS3</span>
               <span class="skill">JavaScript</span>
@@ -243,7 +326,8 @@
               <span class="skill">UI/UX Design</span>
               <span class="skill">Responsive Design</span>
               <span class="skill">Web Performance</span>
-            </div>
+            </div> -->
+
           </div>
           <div class="about-image">
             <img
@@ -444,7 +528,6 @@
                 class="social-icon"
                 ><i class="fa-brands fa-whatsapp"></i
               ></a>
-
               <a
                 href="https://github.com/elikiba"
                 target="_blank"
@@ -468,59 +551,64 @@
               ></a>
             </div>
           </div>
+          
           <div class="contact-form">
-            <form
-              id="clientForm"
-              aria-label="Contact Form"
-              action="submit"
-              method="POST"
-            >
-              <div class="form-group">
-                <label for="subject">Subject</label>
-                <select id="subject" required>
-                  <option value="">Select a subject</option>
-                  <option value="Project Inquiry">Project Inquiry</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="Collaboration">Collaboration</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="dynamic-fields"></div>
-              <div class="form-group">
-                <label for="message">Your Message</label>
-                <textarea
-                  id="message"
-                  placeholder="Tell me about your project..."
-                  required
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" placeholder="Dara Obi" required />
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  placeholder="0708 434 5325"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="email">Your Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="johnbello@gmail.com"
-                  required
-                />
-              </div>
-              <button type="submit" class="submit-btn btn-ripple">
-                Send Message
-              </button>
+            <form id="clientForm" aria-label="Contact Form" novalidate>
+                <!-- Success message container -->
+                <div class="success-message" id="formSuccess">
+                    <div class="success-content">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Message sent successfully! I'll get back to you soon.</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" required>
+                        <option value="">Select a subject</option>
+                        <option value="Project Inquiry">Project Inquiry</option>
+                        <option value="Job Opportunity">Job Opportunity</option>
+                        <option value="Collaboration">Collaboration</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="error-message" id="subjectError"></span>
+                </div>
+                
+                <div class="dynamic-fields"></div>
+                
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" placeholder="Tell me about your project..." required minlength="20"></textarea>
+                    <span class="error-message" id="messageError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Dara Obi" required minlength="2">
+                    <span class="error-message" id="nameError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="0708 434 5325" required pattern="[0-9]{10,15}">
+                    <span class="error-message" id="phoneError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" placeholder="johnbello@gmail.com" required>
+                    <span class="error-message" id="emailError"></span>
+                </div>
+                
+                <button type="submit" class="submit-btn btn-ripple">
+                    <span class="btn-text">Send Message</span>
+                    <div class="spinner hidden">
+                        <div class="spinner-icon"></div>
+                    </div>
+                </button>
             </form>
-          </div>
+        </div>
+
         </div>
       </section>
     </main>
@@ -554,6 +642,21 @@
       </svg>
     </button>
 
-    <script src="script.js"></script>
+    <!-- Firebase SDKs -->
+  <script src="script.js" type="module">
+  // Your EXACT config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDt0xz7tycajvU3PHNoIQ6Jgs6h6ZBvLGE",
+    authDomain: "elikibaprtfolio.firebaseapp.com",
+    projectId: "elikibaprtfolio",
+    storageBucket: "elikibaprtfolio.firebasestorage.app",
+    messagingSenderId: "185552597230",
+    appId: "1:185552597230:web:57af44ea255bf6895903ff"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+</script>
 </body>
 </html>
