@@ -1,14 +1,14 @@
-# 🌟 Elikiba'
+🌟 Elikiba'
 
 My Portfolio Website  
 
-# Frontend Developer </> UI/UX Designer 
+ Frontend Developer </> UI/UX Designer 
 
 🚀 **Live Demo:** [https://elikiba.github.io/Portfolio](https://elikiba.github.io/Portfolio)  
 
 ---
 
-## ✨ **Features**  
+# ✨ **Features**  
 - **Dynamic Video Background** (MP4 fallback)  
 - **Custom Cursor** with hover effects  
 - **Firebase-Powered Contact Form** with real-time validation  
@@ -19,7 +19,7 @@ My Portfolio Website
 
 ---
 
-## 🛠 **Tech Stack**  
+# 🛠 **Tech Stack**  
 | Category       | Technologies Used |  
 |----------------|-------------------|  
 | **Frontend**   | HTML5, CSS3, JavaScript (ES6+) |  
@@ -29,14 +29,14 @@ My Portfolio Website
 
 ---
 
-## 🚀 **Local Setup**  
+# 🚀 **Local Setup**  
 1. **Clone the repo**  
    ```bash
    git clone https://github.com/elikiba/Portfolio.git
    cd Portfolio
 
 
-# 📂 **File Structure**
+ 📂 **File Structure**
 
 Portfolio/
 
@@ -56,7 +56,7 @@ Portfolio/
 
 
    
-## 📬 **Contact me**
+# 📬 **Contact me**
 
 Email: ovenserisosa@gmail.com
 
@@ -64,5 +64,5 @@ LinkedIn: linkedin.com/in/elikiba
 
 Twitter: @Ovenseri_AI
 
-## 📜 License
+# 📜 License
 MIT © Elikiba
