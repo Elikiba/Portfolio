@@ -32,7 +32,12 @@ const elements = {
   contactForm: document.getElementById('clientForm'),
   dynamicFieldContainer: document.querySelector('.dynamic-fields'),
   testimonialItems: document.querySelectorAll('.testimonial-item'),
-  skillElements: document.querySelectorAll('.skill')
+  skillElements: document.querySelectorAll('.skill'),
+  newsletterModal: null,
+  newsletterForm: null,
+  newsletterSuccess: null,
+  closeNewsletter: null,
+  newsletterTimer: null
 };
 
 // ======================
@@ -49,40 +54,40 @@ const utils = {
     }
   },
 
-  createSuccessMessage: () => {
-    const successMessage = document.createElement('div');
-    successMessage.className = 'success-message';
-    successMessage.style.display = 'none';
-    successMessage.innerHTML = `
-      <div class="success-content">
+  createSuccessToast: () => {
+    const toast = document.createElement('div');
+    toast.className = 'success-toast';
+    toast.innerHTML = `
+      <div class="toast-content">
         <i class="fas fa-check-circle"></i>
-        <span>Your message has been sent successfully! I'll get back to you soon.</span>
+        <span>Message sent successfully! I'll get back to you soon.</span>
       </div>
+      <div class="toast-progress"></div>
     `;
-    return successMessage;
+    document.body.appendChild(toast);
+    return toast;
   },
 
-  showSuccessMessage: (messageElement, formElement) => {
-    // Remove any existing messages
-    const existingMessages = formElement.querySelectorAll('.success-message');
-    existingMessages.forEach(msg => msg.remove());
+  showSuccessToast: (toastElement) => {
+    const existingToasts = document.querySelectorAll('.success-toast');
+    existingToasts.forEach(toast => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500);
+    });
     
-    // Add and display new message
-    formElement.insertBefore(messageElement, formElement.firstChild);
-    messageElement.style.display = 'block';
-    
-    // Animate in
     setTimeout(() => {
-      messageElement.style.opacity = '1';
-      messageElement.style.transform = 'translateY(0)';
-    }, 10);
+      toastElement.classList.add('show');
+      
+      const progressBar = toastElement.querySelector('.toast-progress');
+      if (progressBar) {
+        progressBar.style.width = '100%';
+      }
+    }, 50);
 
-    // Auto-dismiss after 5 seconds
     setTimeout(() => {
-      messageElement.style.opacity = '0';
-      messageElement.style.transform = 'translateY(-10px)';
-      setTimeout(() => messageElement.remove(), 300);
-    }, 5000);
+      toastElement.classList.remove('show');
+      setTimeout(() => toastElement.remove(), 500);
+    }, 10000);
   }
 };
 
@@ -462,8 +467,8 @@ const formHandler = {
       await addDoc(collection(db, "submissions"), formData);
       utils.trackEvent('Contact', 'submit', 'Portfolio Form');
       
-      const successMessage = utils.createSuccessMessage();
-      utils.showSuccessMessage(successMessage, this);
+      const successToast = utils.createSuccessToast();
+      utils.showSuccessToast(successToast);
       
       this.reset();
       elements.dynamicFieldContainer.innerHTML = '';
@@ -548,6 +553,147 @@ const skills = {
 };
 
 // ======================
+// Newsletter Functionality
+// ======================
+const newsletter = {
+  init: () => {
+    // Initialize newsletter elements
+    newsletter.createModal();
+    
+    elements.newsletterModal = document.getElementById('newsletterModal');
+    elements.newsletterForm = document.getElementById('newsletterForm');
+    elements.newsletterSuccess = document.querySelector('.newsletter-success');
+    elements.closeNewsletter = document.querySelector('.close-newsletter');
+
+    // Set up event listeners
+    if (elements.closeNewsletter) {
+      elements.closeNewsletter.addEventListener('click', newsletter.closeModal);
+    }
+
+    if (elements.newsletterForm) {
+      elements.newsletterForm.addEventListener('submit', newsletter.handleSubmit);
+    }
+
+    // Only show newsletter if user hasn't subscribed
+    if (!localStorage.getItem('newsletterSubscribed')) {
+      newsletter.startTimer();
+    }
+  },
+
+  createModal: () => {
+    const modalHTML = `
+      <div id="newsletterModal" class="newsletter-modal">
+        <div class="newsletter-content">
+          <button class="close-newsletter" aria-label="Close Newsletter">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="newsletter-header">
+            <h3>Stay Updated</h3>
+            <p>I write about tech, fitness, and I also analyze real-world events in real time.
+            Subscribe to get free updates.</p>
+          </div>
+          <form id="newsletterForm" class="newsletter-form">
+            <div class="form-group">
+              <input type="email" id="newsletterEmail" placeholder="Your best email" required>
+              <span class="error-message" id="newsletterError"></span>
+            </div>
+            <button type="submit" class="submit-btn btn-ripple">
+              <span class="btn-text">Subscribe</span>
+              <div class="spinner hidden"></div>
+            </button>
+          </form>
+          <div class="newsletter-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Thanks for subscribing! You'll hear from me soon.</span>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  },
+
+  startTimer: () => {
+    elements.newsletterTimer = setTimeout(() => {
+      newsletter.showModal();
+    }, 30000); // 30 seconds
+  },
+
+  showModal: () => {
+    if (elements.newsletterModal) {
+      elements.newsletterModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  },
+
+  closeModal: () => {
+    if (elements.newsletterModal) {
+      elements.newsletterModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  },
+
+  validateEmail: (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  },
+
+  handleSubmit: async function(e) {
+    e.preventDefault();
+    
+    const emailInput = this.querySelector('#newsletterEmail');
+    const errorElement = document.getElementById('newsletterError');
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const spinner = submitBtn.querySelector('.spinner');
+    
+    // Validate email
+    if (!newsletter.validateEmail(emailInput.value)) {
+      errorElement.textContent = 'Please enter a valid email address';
+      emailInput.classList.add('invalid');
+      return;
+    }
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.textContent = 'Subscribing...';
+    spinner.classList.remove('hidden');
+    
+    try {
+      // Save to Firebase
+      await addDoc(collection(db, "newsletterSubscribers"), {
+        email: emailInput.value,
+        timestamp: new Date(),
+        source: "Portfolio Website"
+      });
+      
+      // Track the subscription
+      utils.trackEvent('Newsletter', 'subscribe', 'Modal');
+      
+      // Store in localStorage to prevent showing again
+      localStorage.setItem('newsletterSubscribed', 'true');
+      localStorage.setItem('subscriberEmail', emailInput.value);
+      
+      // Hide form and show success message
+      this.style.display = 'none';
+      elements.newsletterSuccess.style.display = 'flex';
+      
+      // Close modal after 5 seconds
+      setTimeout(() => {
+        newsletter.closeModal();
+      }, 5000);
+      
+    } catch (error) {
+      console.error("Error saving subscriber:", error);
+      errorElement.textContent = "Subscription failed. Please try again later.";
+    } finally {
+      submitBtn.disabled = false;
+      btnText.textContent = 'Subscribe';
+      spinner.classList.add('hidden');
+    }
+  }
+};
+
+// ======================
 // Initialize Everything
 // ======================
 document.addEventListener('DOMContentLoaded', () => {
@@ -560,4 +706,5 @@ document.addEventListener('DOMContentLoaded', () => {
   videoBackground.init();
   testimonials.init();
   skills.init();
+  newsletter.init();
 });
