@@ -43,7 +43,6 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Top Web Designer in Nigeria | Lagos & Benin City">
-  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@Ovenseri_AI">
   <meta name="twitter:creator" content="@Ovenseri_AI"> 
   <meta name="twitter:image" content="https://elikiba.github.io/Portfolio/Oma.jpg">
@@ -227,7 +226,7 @@
               digital experiences that are both beautiful and functional.
             </p>
             <p>
-              I specialize in HTML5, CSS3, Tailwind and JavaScript (ES6+), and
+              I specialize in HTML5, CSS3 and Tailwind, JavaScript (ES6+), and
               modern frameworks like React. My approach combines technical
               excellence with design sensibility, ensuring that every project
               not only works flawlessly but also delivers an exceptional user
@@ -256,7 +255,7 @@
                   </div>
                 </div>
               </div>
-              <div class="skill" data-level="85">
+              <div class="skill" data-level="80">
                 <span>JavaScript</span>
                 <div class="skill-container">
                   <div class="skill-bar">
@@ -264,7 +263,7 @@
                   </div>
                 </div>
               </div>
-              <div class="skill" data-level="80">
+              <div class="skill" data-level="70">
                 <span>React</span>
                 <div class="skill-container">
                   <div class="skill-bar">
@@ -272,7 +271,7 @@
                   </div>
                 </div>
               </div>
-              <div class="skill" data-level="85">
+              <div class="skill" data-level="70">
                 <span>Tailwind</span>
                 <div class="skill-container">
                   <div class="skill-bar">
@@ -280,7 +279,7 @@
                   </div>
                 </div>
               </div>
-              <div class="skill" data-level="75">
+              <div class="skill" data-level="70">
                 <span>Git</span>
                 <div class="skill-container">
                   <div class="skill-bar">
@@ -313,20 +312,6 @@
                 </div>
               </div>
             </div>
-
-            
-
-            <!-- <div class="skills">
-              <span class="skill">HTML5</span>
-              <span class="skill">CSS3</span>
-              <span class="skill">JavaScript</span>
-              <span class="skill">React</span>
-              <span class="skill">Tailwind</span>
-              <span class="skill">Git</span>
-              <span class="skill">UI/UX Design</span>
-              <span class="skill">Responsive Design</span>
-              <span class="skill">Web Performance</span>
-            </div> -->
 
           </div>
           <div class="about-image">
@@ -379,19 +364,19 @@
 
           <div class="work-item">
             <img
-              src="Iriod.png"
-              alt="Iriod Global Logistics Website"
+              src="Iriode.png"
+              alt="Iriode Global Logistics Website"
               loading="lazy"
             />
             <div class="work-info">
-              <h3>Iriod Global Logistics</h3>
+              <h3>Iriode Global Logistics</h3>
               <p>Company website that increased client turnover by 65%</p>
             </div>
             <a
               href="https://elikiba.github.io/Iroidglobal"
               target="_blank"
               class="work-link"
-              aria-label="View Iriod Global Project"
+              aria-label="View Iriode Global Project"
               ><i class="fas fa-external-link-alt"></i
             ></a>
           </div>
@@ -435,21 +420,21 @@
               <i class="fas fa-quote-left quote-icon"></i>
               <p class="testimonial-text">
                 Aisosa completely transformed our online presence with the
-                Iriod Global Logistics website. His attention to detail,
+                Iriode Global Logistics website. His attention to detail,
                 creative solutions, and technical expertise resulted in over 60%
                 increase in client inquiries within the first month. He's not
                 just a developer but a true partner in our digital growth.
               </p>
               <div class="testimonial-author">
                 <img
-                  src="sea.jpg"
-                  alt="CEO of Iriod Global & Logistics"
+                  src="gabe.jpg"
+                  alt="CEO of Iriode Global & Logistics"
                   loading="lazy"
                   class="testimonial-avatar"
                 />
                 <div class="author-info">
                   <h4>Gabriel Osareniro</h4>
-                  <p>CEO & Founder, Iriod Global & Logistics</p>
+                  <p>CEO & Founder, Iriode Global & Logistics</p>
                 </div>
               </div>
             </div>
@@ -484,7 +469,7 @@
         <h2 class="section-title">Get In Touch</h2>
         <div class="contact-container">
           <div class="contact-info">
-            <h3>Let's Create Something Amazing</h3>
+            <h3>Let's Create Something Amazing!</h3>
             <p>
               Have a project in mind or want to discuss potential opportunities?
               I'm currently available for freelance work and full-time
@@ -555,7 +540,7 @@
           <div class="contact-form">
             <form id="clientForm" aria-label="Contact Form" novalidate>
                 <!-- Success message container -->
-                <div class="success-message" id="formSuccess">
+                <div class="success-message" id="formSuccess" aria-live="polite">
                     <div class="success-content">
                         <i class="fas fa-check-circle"></i>
                         <span>Message sent successfully! I'll get back to you soon.</span>
@@ -642,6 +627,34 @@
       </svg>
     </button>
 
+    <!-- Newsletter Modal -->
+<div id="newsletterModal" class="newsletter-modal">
+    <div class="newsletter-content">
+      <button class="close-newsletter" aria-label="Close Newsletter">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="newsletter-header">
+        <h3>Stay Updated!</h3>
+        <p>I write about tech, fitness, and I also analyze real-world events in real time.
+            Subscribe to get free updates.</p>
+      </div>
+      <form id="newsletterForm" class="newsletter-form">
+        <div class="form-group">
+          <input type="email" id="newsletterEmail" placeholder="Your best email" required>
+          <span class="error-message" id="newsletterError"></span>
+        </div>
+        <button type="submit" class="submit-btn btn-ripple">
+          <span class="btn-text">Subscribe</span>
+          <div class="spinner hidden"></div>
+        </button>
+      </form>
+      <div class="newsletter-success">
+        <i class="fas fa-check-circle"></i>
+        <span>Thanks for subscribing! You'll hear from me soon.</span>
+      </div>
+    </div>
+  </div>
+    
     <!-- Firebase SDKs -->
   <script src="script.js" type="module">
   // Your EXACT config
