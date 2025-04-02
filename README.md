@@ -34,8 +34,9 @@ Frontend Developer</> UI/UX Designer
    cd Portfolio
 
    
-📬 Contact
-Email: ovenserisosa@gmail.com
+📬 Contact me
+
+-- Email: ovenserisosa@gmail.com
 
 LinkedIn: linkedin.com/in/elikiba
 
