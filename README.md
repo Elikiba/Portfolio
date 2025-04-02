@@ -4,8 +4,6 @@
 Frontend Developer</> UI/UX Designer 
 🚀 **Live Demo:** [https://elikiba.github.io/Portfolio](https://elikiba.github.io/Portfolio)  
 
-/*(https://elikiba.github.io/Portfolio/pw.jpg)*/
-
 ---
 
 ## ✨ **Features**  
