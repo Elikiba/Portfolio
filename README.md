@@ -1,7 +1,9 @@
-🌟 Elikiba'
--- My Portfolio Website  
+# 🌟 Elikiba'
 
-Frontend Developer</> UI/UX Designer 
+My Portfolio Website  
+
+# Frontend Developer </> UI/UX Designer 
+
 🚀 **Live Demo:** [https://elikiba.github.io/Portfolio](https://elikiba.github.io/Portfolio)  
 
 ---
@@ -33,11 +35,34 @@ Frontend Developer</> UI/UX Designer
    git clone https://github.com/elikiba/Portfolio.git
    cd Portfolio
 
-   
-📬 Contact me
 
--- Email: ovenserisosa@gmail.com
+# 📂 **File Structure**
+
+Portfolio/
+
+├── index.htm          # Main HTML file
+
+├── script.js          # All JavaScript logic (Firebase, animations)
+
+├── styles.css         # Global styles
+
+├── particles.mp4      # Video background
+
+├── Oma.jpg            # Profile image
+
+├── Elikiba.pdf        # Resume
+
+└── README.md          # You're here!
+
+
+   
+## 📬 **Contact me**
+
+Email: ovenserisosa@gmail.com
 
 LinkedIn: linkedin.com/in/elikiba
 
 Twitter: @Ovenseri_AI
+
+## 📜 License
+MIT © Elikiba
