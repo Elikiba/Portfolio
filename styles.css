@@ -358,7 +358,7 @@ section.visible {
 
 .hero-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 6rem;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 0.5rem !important;
