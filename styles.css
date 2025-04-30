@@ -284,6 +284,10 @@ section.visible {
     background-color: rgb(236, 226, 228);
 }
 
+.works .section-title {
+    color: var(--secondary);
+}
+
 .section-title {
     color: var(--primary);
     font-size: 2.5rem;
@@ -451,11 +455,11 @@ section.visible {
     width: calc(50% - 0.6rem);
     max-width: 120px;
     padding: 0.4rem;
-    background-color: var(--medium);
+    background-color: rgb(221, 184, 190);
     border-radius: 50px;
     transition: all 0.3s ease;
     overflow: hidden;
-    border: 1px solid rgba(255, 223, 0, 0.2);
+    border: 1px solid rgba(252, 218, 0, 0.2);
     cursor: pointer;
   }
   
