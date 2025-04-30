@@ -358,7 +358,7 @@ section.visible {
 
 .hero-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 7rem;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 0.5rem !important;
@@ -488,7 +488,7 @@ section.visible {
   .skill-bar {
     width: 100%;
     height: 5px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(190, 155, 235, 0.952);
     border-radius: 3px;
     overflow: hidden;
     position: relative;
@@ -1411,7 +1411,11 @@ footer {
         justify-content: center;
         background: rgba(248, 249, 250, 0.9);
         padding: 10px 0;
-        gap: 0.5rem;
+        gap: 0.4rem;
+    }
+    
+    .social-links a {
+        font-size: 1.3rem;
     }
 
     .hero h2 {
