@@ -85,7 +85,7 @@ const utils = {
     setTimeout(() => {
       toastElement.classList.remove('show');
       setTimeout(() => toastElement.remove(), 500);
-    }, 10000);
+    }, 7000); // Changed from 10000 to 7000 for form messages
   },
 
   validateEmail: (email) => {
@@ -119,35 +119,35 @@ const newsletter = {
     init: () => {
       if (!elements.newsletterModal || !elements.newsletterForm) return;
   
-      // Check if modal was already shown
-      if (localStorage.getItem('newsletterShown')) return;
-  
       // Show modal after delay
       setTimeout(() => {
-        newsletter.showModal();
-      }, 8000); // 8 seconds delay
-  
-      // Close handlers
-      elements.closeNewsletter.addEventListener('click', newsletter.hideModal);
-      elements.newsletterModal.addEventListener('click', (e) => {
-        if (e.target === elements.newsletterModal) {
-          newsletter.hideModal();
+        if (!sessionStorage.getItem('newsletterShown')) {
+          newsletter.showModal();
+          sessionStorage.setItem('newsletterShown', 'true');
         }
-      });
+      }, 30000);
   
-      // Form submission
+      // Only allow closing via the close button
+      elements.closeNewsletter.addEventListener('click', newsletter.hideModal);
+  
+      // Form submission handler
       elements.newsletterForm.addEventListener('submit', newsletter.handleSubmit);
     },
   
     showModal: () => {
       elements.newsletterModal.style.display = 'flex';
-      document.body.style.overflow = 'hidden'; // Prevent scrolling
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        elements.newsletterModal.style.opacity = '1';
+      }, 10);
     },
   
     hideModal: () => {
-      elements.newsletterModal.style.display = 'none';
-      document.body.style.overflow = ''; // Re-enable scrolling
-      localStorage.setItem('newsletterShown', 'true');
+      elements.newsletterModal.style.opacity = '0';
+      setTimeout(() => {
+        elements.newsletterModal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
     },
   
     handleSubmit: async (e) => {
@@ -167,8 +167,13 @@ const newsletter = {
           
           const toast = utils.createSuccessToast('Thanks for subscribing!');
           utils.showSuccessToast(toast);
-          newsletter.hideModal();
           e.target.reset();
+          
+          // Auto-close after 4 seconds
+          setTimeout(() => {
+            newsletter.hideModal();
+          }, 4000);
+          
         } catch (error) {
           console.error("Error saving subscriber:", error);
           const toast = utils.createSuccessToast('Subscription failed. Please try again.');
@@ -194,6 +199,7 @@ const newsletter = {
       return true;
     }
   };
+
 
 // ======================
 // Cursor Control
@@ -439,7 +445,6 @@ const formHandler = {
     elements.dynamicFieldContainer.innerHTML = '';
     if (formHandler.fieldTemplates[this.value]) {
       elements.dynamicFieldContainer.innerHTML = formHandler.fieldTemplates[this.value];
-      // Setup validation for new fields
       formHandler.setupValidation();
     }
   },
@@ -451,7 +456,6 @@ const formHandler = {
       { id: 'phone', validator: formHandler.validatePhone },
       { id: 'message', validator: formHandler.validateMessage },
       { id: 'subject', validator: formHandler.validateSubject },
-      // Dynamic fields
       { id: 'projectType', validator: formHandler.validateRequired },
       { id: 'budget', validator: formHandler.validateRequired },
       { id: 'timeline', validator: formHandler.validateRequired },
@@ -478,14 +482,12 @@ const formHandler = {
   validateAllFields: () => {
     let isValid = true;
     
-    // Validate main form fields
     if (!formHandler.validateName(document.getElementById('name'))) isValid = false;
     if (!formHandler.validateEmail(document.getElementById('email'))) isValid = false;
     if (!formHandler.validatePhone(document.getElementById('phone'))) isValid = false;
     if (!formHandler.validateMessage(document.getElementById('message'))) isValid = false;
     if (!formHandler.validateSubject(document.getElementById('subject'))) isValid = false;
     
-    // Validate dynamic fields based on subject
     const subject = document.getElementById('subject').value;
     if (subject === 'Project Inquiry') {
       if (!formHandler.validateRequired(document.getElementById('projectType'))) isValid = false;
@@ -572,7 +574,7 @@ const formHandler = {
   },
 
   validateRequired: (element) => {
-    if (!element) return true; // Skip if element doesn't exist
+    if (!element) return true;
     
     const value = element.value;
     if (element.tagName === 'SELECT' && !value) {
@@ -607,7 +609,6 @@ const formHandler = {
         timestamp: new Date()
       };
 
-      // Add dynamic fields based on subject
       const subject = this.subject.value;
       if (subject === 'Project Inquiry') {
         formData.projectType = this.projectType.value;
@@ -635,6 +636,15 @@ const formHandler = {
       this.querySelectorAll('.form-group input, .form-group textarea, .form-group select').forEach(field => {
         field.classList.remove('valid', 'invalid');
       });
+
+      // Show success message for 7 seconds
+      const successElement = document.getElementById('formSuccess');
+      if (successElement) {
+        successElement.style.display = 'block';
+        setTimeout(() => {
+          successElement.style.display = 'none';
+        }, 7000);
+      }
 
     } catch (error) {
       console.error("Error saving message:", error);

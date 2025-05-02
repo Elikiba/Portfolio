@@ -181,7 +181,7 @@ nav.scroll {
 .social-links {
     display: flex;
     position: relative;
-    gap: 0.6 rem;
+    gap: 0.9 rem;
     z-index: 1000;
 }
 
@@ -198,8 +198,8 @@ nav.scroll {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: rgb(226, 198, 15);
     z-index: 1001;
@@ -221,7 +221,7 @@ nav.scroll {
     cursor: none;
     padding: 0.5rem;
     z-index: 101;
-    margin-left: 0.5rem; /* Added margin */
+    margin-left: 0.4rem; /* Added margin */
 }
 
 .hamburger {
@@ -1199,57 +1199,6 @@ footer {
     stroke-dashoffset: 126;
     transition: stroke-dashoffset 0.1s linear;
 }
-
-/* Add to your existing styles */
-.newsletter-icon {
-    position: relative;
-    width: 60px;
-    height: 40px;
-    background: var(--secondary);
-    border-radius: 4px;
-    margin: 0 auto 20px;
-    animation: float 3s ease-in-out infinite;
-    cursor: pointer;
-  }
-  
-  .newsletter-icon:before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-left: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 10px solid var(--secondary);
-    transform-origin: bottom;
-    animation: envelope-open 3s ease-in-out infinite;
-  }
-  
-  .newsletter-icon:after {
-    content: '✉️';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0;
-    animation: mail-appear 3s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  @keyframes envelope-open {
-    0%, 100% { transform: rotateX(0deg); }
-    50% { transform: rotateX(180deg); }
-  }
-  
-  @keyframes mail-appear {
-    0%, 40%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-    50%, 60% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-  }
   
   /* Newsletter Modal Styles */
   .newsletter-modal {
@@ -1329,6 +1278,57 @@ footer {
         transform: translateY(0);
     }
 }
+
+/* Newsletter Icon */
+.newsletter-icon {
+    position: relative;
+    width: 60px;
+    height: 40px;
+    background: var(--secondary);
+    border-radius: 4px;
+    margin: 0 auto 20px;
+    animation: float 3s ease-in-out infinite;
+    cursor: pointer;
+  }
+  
+  .newsletter-icon:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 10px solid var(--secondary);
+    transform-origin: bottom;
+    animation: envelope-open 3s ease-in-out infinite;
+  }
+  
+  .newsletter-icon:after {
+    content: '✉️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+    animation: mail-appear 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes envelope-open {
+    0%, 100% { transform: rotateX(0deg); }
+    50% { transform: rotateX(180deg); }
+  }
+  
+  @keyframes mail-appear {
+    0%, 40%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50%, 60% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  }
 
 /* MEDIA QUERIES START  */
 
