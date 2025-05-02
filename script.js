@@ -33,11 +33,9 @@ const elements = {
   dynamicFieldContainer: document.querySelector('.dynamic-fields'),
   testimonialItems: document.querySelectorAll('.testimonial-item'),
   skillElements: document.querySelectorAll('.skill'),
-  newsletterModal: null,
-  newsletterForm: null,
-  newsletterSuccess: null,
-  closeNewsletter: null,
-  newsletterTimer: null
+  newsletterModal: document.getElementById('newsletterModal'),
+  newsletterForm: document.querySelector('.newsletter-form'),
+  closeNewsletter: document.querySelector('.close-newsletter')
 };
 
 // ======================
@@ -54,13 +52,13 @@ const utils = {
     }
   },
 
-  createSuccessToast: () => {
+  createSuccessToast: (message = 'Message sent successfully! I\'ll get back to you soon.') => {
     const toast = document.createElement('div');
     toast.className = 'success-toast';
     toast.innerHTML = `
       <div class="toast-content">
         <i class="fas fa-check-circle"></i>
-        <span>Message sent successfully! I'll get back to you soon.</span>
+        <span>${message}</span>
       </div>
       <div class="toast-progress"></div>
     `;
@@ -88,8 +86,114 @@ const utils = {
       toastElement.classList.remove('show');
       setTimeout(() => toastElement.remove(), 500);
     }, 10000);
+  },
+
+  validateEmail: (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  },
+
+  showError: (element, message) => {
+    const errorElement = element.nextElementSibling;
+    if (errorElement && errorElement.classList.contains('error-message')) {
+      errorElement.textContent = message;
+      element.classList.add('invalid');
+      element.classList.remove('valid');
+    }
+  },
+
+  clearError: (element) => {
+    const errorElement = element.nextElementSibling;
+    if (errorElement && errorElement.classList.contains('error-message')) {
+      errorElement.textContent = '';
+      element.classList.remove('invalid');
+      element.classList.add('valid');
+    }
   }
 };
+
+// ======================
+// Newsletter Handling
+// ======================
+const newsletter = {
+    init: () => {
+      if (!elements.newsletterModal || !elements.newsletterForm) return;
+  
+      // Check if modal was already shown
+      if (localStorage.getItem('newsletterShown')) return;
+  
+      // Show modal after delay
+      setTimeout(() => {
+        newsletter.showModal();
+      }, 8000); // 8 seconds delay
+  
+      // Close handlers
+      elements.closeNewsletter.addEventListener('click', newsletter.hideModal);
+      elements.newsletterModal.addEventListener('click', (e) => {
+        if (e.target === elements.newsletterModal) {
+          newsletter.hideModal();
+        }
+      });
+  
+      // Form submission
+      elements.newsletterForm.addEventListener('submit', newsletter.handleSubmit);
+    },
+  
+    showModal: () => {
+      elements.newsletterModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    },
+  
+    hideModal: () => {
+      elements.newsletterModal.style.display = 'none';
+      document.body.style.overflow = ''; // Re-enable scrolling
+      localStorage.setItem('newsletterShown', 'true');
+    },
+  
+    handleSubmit: async (e) => {
+      e.preventDefault();
+      const emailInput = e.target.querySelector('input[type="email"]');
+      
+      if (newsletter.validateEmail(emailInput)) {
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+  
+        try {
+          await addDoc(collection(db, "newsletterSubscribers"), {
+            email: emailInput.value.trim(),
+            timestamp: new Date()
+          });
+          
+          const toast = utils.createSuccessToast('Thanks for subscribing!');
+          utils.showSuccessToast(toast);
+          newsletter.hideModal();
+          e.target.reset();
+        } catch (error) {
+          console.error("Error saving subscriber:", error);
+          const toast = utils.createSuccessToast('Subscription failed. Please try again.');
+          utils.showSuccessToast(toast);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Subscribe';
+        }
+      }
+    },
+  
+    validateEmail: (input) => {
+      const email = input.value.trim();
+      if (!email) {
+        utils.showError(input, 'Email is required');
+        return false;
+      }
+      if (!utils.validateEmail(email)) {
+        utils.showError(input, 'Please enter a valid email');
+        return false;
+      }
+      utils.clearError(input);
+      return true;
+    }
+  };
 
 // ======================
 // Cursor Control
@@ -335,41 +439,67 @@ const formHandler = {
     elements.dynamicFieldContainer.innerHTML = '';
     if (formHandler.fieldTemplates[this.value]) {
       elements.dynamicFieldContainer.innerHTML = formHandler.fieldTemplates[this.value];
+      // Setup validation for new fields
+      formHandler.setupValidation();
     }
   },
 
   setupValidation: () => {
-    const fields = {
-      name: { element: elements.contactForm.querySelector('#name'), errorId: 'nameError', validator: formHandler.validateName },
-      email: { element: elements.contactForm.querySelector('#email'), errorId: 'emailError', validator: formHandler.validateEmail },
-      phone: { element: elements.contactForm.querySelector('#phone'), errorId: 'phoneError', validator: formHandler.validatePhone },
-      message: { element: elements.contactForm.querySelector('#message'), errorId: 'messageError', validator: formHandler.validateMessage },
-      subject: { element: elements.contactForm.querySelector('#subject'), errorId: 'subjectError', validator: formHandler.validateSubject }
-    };
+    const fields = [
+      { id: 'name', validator: formHandler.validateName },
+      { id: 'email', validator: formHandler.validateEmail },
+      { id: 'phone', validator: formHandler.validatePhone },
+      { id: 'message', validator: formHandler.validateMessage },
+      { id: 'subject', validator: formHandler.validateSubject },
+      // Dynamic fields
+      { id: 'projectType', validator: formHandler.validateRequired },
+      { id: 'budget', validator: formHandler.validateRequired },
+      { id: 'timeline', validator: formHandler.validateRequired },
+      { id: 'position', validator: formHandler.validateRequired },
+      { id: 'company', validator: formHandler.validateRequired },
+      { id: 'collabType', validator: formHandler.validateRequired },
+      { id: 'collabDetails', validator: formHandler.validateRequired },
+      { id: 'otherDetails', validator: formHandler.validateRequired }
+    ];
 
-    Object.values(fields).forEach(({ element, errorId, validator }) => {
+    fields.forEach(({ id, validator }) => {
+      const element = document.getElementById(id);
       if (element) {
-        element.addEventListener('blur', () => formHandler.validateField(element, errorId, validator));
-        element.addEventListener('input', () => formHandler.validateField(element, errorId, validator));
+        element.addEventListener('blur', () => validator(element));
+        element.addEventListener('input', () => {
+          if (element.value.trim() === '') {
+            utils.clearError(element);
+          }
+        });
       }
     });
   },
 
   validateAllFields: () => {
-    const fields = [
-      { element: elements.contactForm.querySelector('#name'), errorId: 'nameError', validator: formHandler.validateName },
-      { element: elements.contactForm.querySelector('#email'), errorId: 'emailError', validator: formHandler.validateEmail },
-      { element: elements.contactForm.querySelector('#phone'), errorId: 'phoneError', validator: formHandler.validatePhone },
-      { element: elements.contactForm.querySelector('#message'), errorId: 'messageError', validator: formHandler.validateMessage },
-      { element: elements.contactForm.querySelector('#subject'), errorId: 'subjectError', validator: formHandler.validateSubject }
-    ];
-
     let isValid = true;
-    fields.forEach(({ element, errorId, validator }) => {
-      if (!formHandler.validateField(element, errorId, validator)) {
-        isValid = false;
-      }
-    });
+    
+    // Validate main form fields
+    if (!formHandler.validateName(document.getElementById('name'))) isValid = false;
+    if (!formHandler.validateEmail(document.getElementById('email'))) isValid = false;
+    if (!formHandler.validatePhone(document.getElementById('phone'))) isValid = false;
+    if (!formHandler.validateMessage(document.getElementById('message'))) isValid = false;
+    if (!formHandler.validateSubject(document.getElementById('subject'))) isValid = false;
+    
+    // Validate dynamic fields based on subject
+    const subject = document.getElementById('subject').value;
+    if (subject === 'Project Inquiry') {
+      if (!formHandler.validateRequired(document.getElementById('projectType'))) isValid = false;
+      if (!formHandler.validateRequired(document.getElementById('budget'))) isValid = false;
+      if (!formHandler.validateRequired(document.getElementById('timeline'))) isValid = false;
+    } else if (subject === 'Job Opportunity') {
+      if (!formHandler.validateRequired(document.getElementById('position'))) isValid = false;
+      if (!formHandler.validateRequired(document.getElementById('company'))) isValid = false;
+    } else if (subject === 'Collaboration') {
+      if (!formHandler.validateRequired(document.getElementById('collabType'))) isValid = false;
+      if (!formHandler.validateRequired(document.getElementById('collabDetails'))) isValid = false;
+    } else if (subject === 'Other') {
+      if (!formHandler.validateRequired(document.getElementById('otherDetails'))) isValid = false;
+    }
 
     if (!isValid) {
       const firstError = document.querySelector('.invalid');
@@ -382,61 +512,78 @@ const formHandler = {
     return isValid;
   },
 
-  validateField: (field, errorId, validationFn) => {
-    const errorElement = document.getElementById(errorId);
-    const isValid = validationFn(field.value);
-    
-    if (!isValid) {
-      field.classList.add('invalid');
-      field.classList.remove('valid');
-      return false;
-    } else {
-      field.classList.remove('invalid');
-      field.classList.add('valid');
-      if (errorElement) errorElement.textContent = '';
-      return true;
-    }
-  },
-
-  validateName: (value) => {
-    if (value.trim().length < 2) {
-      document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
+  validateName: (element) => {
+    const value = element.value.trim();
+    if (value.length < 2) {
+      utils.showError(element, 'Name must be at least 2 characters');
       return false;
     }
+    utils.clearError(element);
     return true;
   },
 
-  validateEmail: (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      document.getElementById('emailError').textContent = 'Please enter a valid email address';
+  validateEmail: (element) => {
+    const value = element.value.trim();
+    if (value === '') {
+      utils.showError(element, 'Email is required');
       return false;
     }
+    if (!utils.validateEmail(value)) {
+      utils.showError(element, 'Please enter a valid email address');
+      return false;
+    }
+    utils.clearError(element);
     return true;
   },
 
-  validatePhone: (value) => {
+  validatePhone: (element) => {
+    const value = element.value.trim();
     const phoneRegex = /^[0-9]{10,15}$/;
+    if (value === '') {
+      utils.showError(element, 'Phone number is required');
+      return false;
+    }
     if (!phoneRegex.test(value)) {
-      document.getElementById('phoneError').textContent = 'Please enter 10-15 digit phone number';
+      utils.showError(element, 'Please enter 10-15 digit phone number');
       return false;
     }
+    utils.clearError(element);
     return true;
   },
 
-  validateMessage: (value) => {
-    if (value.trim().length < 20) {
-      document.getElementById('messageError').textContent = 'Message should be at least 20 characters';
+  validateMessage: (element) => {
+    const value = element.value.trim();
+    if (value.length < 20) {
+      utils.showError(element, 'Message should be at least 20 characters');
       return false;
     }
+    utils.clearError(element);
     return true;
   },
 
-  validateSubject: (value) => {
+  validateSubject: (element) => {
+    const value = element.value;
     if (!value) {
-      document.getElementById('subjectError').textContent = 'Please select a subject';
+      utils.showError(element, 'Please select a subject');
       return false;
     }
+    utils.clearError(element);
+    return true;
+  },
+
+  validateRequired: (element) => {
+    if (!element) return true; // Skip if element doesn't exist
+    
+    const value = element.value;
+    if (element.tagName === 'SELECT' && !value) {
+      utils.showError(element, 'This field is required');
+      return false;
+    }
+    if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && value.trim() === '') {
+      utils.showError(element, 'This field is required');
+      return false;
+    }
+    utils.clearError(element);
     return true;
   },
 
@@ -460,9 +607,21 @@ const formHandler = {
         timestamp: new Date()
       };
 
-      this.querySelectorAll('.dynamic-fields input, .dynamic-fields select, .dynamic-fields textarea').forEach(field => {
-        formData[field.name] = field.value;
-      });
+      // Add dynamic fields based on subject
+      const subject = this.subject.value;
+      if (subject === 'Project Inquiry') {
+        formData.projectType = this.projectType.value;
+        formData.budget = this.budget.value;
+        formData.timeline = this.timeline.value;
+      } else if (subject === 'Job Opportunity') {
+        formData.position = this.position.value;
+        formData.company = this.company.value;
+      } else if (subject === 'Collaboration') {
+        formData.collabType = this.collabType.value;
+        formData.collabDetails = this.collabDetails.value;
+      } else if (subject === 'Other') {
+        formData.otherDetails = this.otherDetails.value;
+      }
 
       await addDoc(collection(db, "submissions"), formData);
       utils.trackEvent('Contact', 'submit', 'Portfolio Form');
@@ -479,7 +638,8 @@ const formHandler = {
 
     } catch (error) {
       console.error("Error saving message:", error);
-      alert("Failed to send message. Please email me directly at ovenserisosa@gmail.com");
+      const toast = utils.createSuccessToast("Failed to send message. Please email me directly at ovenserisosa@gmail.com");
+      utils.showSuccessToast(toast);
     } finally {
       submitBtn.disabled = false;
       submitBtn.querySelector('.btn-text').textContent = 'Send Message';
@@ -549,147 +709,6 @@ const skills = {
       const level = skill.getAttribute('data-level');
       skill.style.setProperty('--skill-level', `${level}%`);
     });
-  }
-};
-
-// ======================
-// Newsletter Functionality
-// ======================
-const newsletter = {
-  init: () => {
-    // Initialize newsletter elements
-    newsletter.createModal();
-    
-    elements.newsletterModal = document.getElementById('newsletterModal');
-    elements.newsletterForm = document.getElementById('newsletterForm');
-    elements.newsletterSuccess = document.querySelector('.newsletter-success');
-    elements.closeNewsletter = document.querySelector('.close-newsletter');
-
-    // Set up event listeners
-    if (elements.closeNewsletter) {
-      elements.closeNewsletter.addEventListener('click', newsletter.closeModal);
-    }
-
-    if (elements.newsletterForm) {
-      elements.newsletterForm.addEventListener('submit', newsletter.handleSubmit);
-    }
-
-    // Only show newsletter if user hasn't subscribed
-    if (!localStorage.getItem('newsletterSubscribed')) {
-      newsletter.startTimer();
-    }
-  },
-
-  createModal: () => {
-    const modalHTML = `
-      <div id="newsletterModal" class="newsletter-modal">
-        <div class="newsletter-content">
-          <button class="close-newsletter" aria-label="Close Newsletter">
-            <i class="fas fa-times"></i>
-          </button>
-          <div class="newsletter-header">
-            <h3>Stay Updated</h3>
-            <p>I write about tech, fitness, and I also analyze real-world events in real time.
-            Subscribe to get free updates.</p>
-          </div>
-          <form id="newsletterForm" class="newsletter-form">
-            <div class="form-group">
-              <input type="email" id="newsletterEmail" placeholder="Your best email" required>
-              <span class="error-message" id="newsletterError"></span>
-            </div>
-            <button type="submit" class="submit-btn btn-ripple">
-              <span class="btn-text">Subscribe</span>
-              <div class="spinner hidden"></div>
-            </button>
-          </form>
-          <div class="newsletter-success">
-            <i class="fas fa-check-circle"></i>
-            <span>Thanks for subscribing! You'll hear from me soon.</span>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-  },
-
-  startTimer: () => {
-    elements.newsletterTimer = setTimeout(() => {
-      newsletter.showModal();
-    }, 30000); // 30 seconds
-  },
-
-  showModal: () => {
-    if (elements.newsletterModal) {
-      elements.newsletterModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-  },
-
-  closeModal: () => {
-    if (elements.newsletterModal) {
-      elements.newsletterModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-  },
-
-  validateEmail: (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  },
-
-  handleSubmit: async function(e) {
-    e.preventDefault();
-    
-    const emailInput = this.querySelector('#newsletterEmail');
-    const errorElement = document.getElementById('newsletterError');
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const spinner = submitBtn.querySelector('.spinner');
-    
-    // Validate email
-    if (!newsletter.validateEmail(emailInput.value)) {
-      errorElement.textContent = 'Please enter a valid email address';
-      emailInput.classList.add('invalid');
-      return;
-    }
-    
-    // Show loading state
-    submitBtn.disabled = true;
-    btnText.textContent = 'Subscribing...';
-    spinner.classList.remove('hidden');
-    
-    try {
-      // Save to Firebase
-      await addDoc(collection(db, "newsletterSubscribers"), {
-        email: emailInput.value,
-        timestamp: new Date(),
-        source: "Portfolio Website"
-      });
-      
-      // Track the subscription
-      utils.trackEvent('Newsletter', 'subscribe', 'Modal');
-      
-      // Store in localStorage to prevent showing again
-      localStorage.setItem('newsletterSubscribed', 'true');
-      localStorage.setItem('subscriberEmail', emailInput.value);
-      
-      // Hide form and show success message
-      this.style.display = 'none';
-      elements.newsletterSuccess.style.display = 'flex';
-      
-      // Close modal after 5 seconds
-      setTimeout(() => {
-        newsletter.closeModal();
-      }, 5000);
-      
-    } catch (error) {
-      console.error("Error saving subscriber:", error);
-      errorElement.textContent = "Subscription failed. Please try again later.";
-    } finally {
-      submitBtn.disabled = false;
-      btnText.textContent = 'Subscribe';
-      spinner.classList.add('hidden');
-    }
   }
 };
 

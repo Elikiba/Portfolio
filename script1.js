@@ -33,11 +33,6 @@ const elements = {
   dynamicFieldContainer: document.querySelector('.dynamic-fields'),
   testimonialItems: document.querySelectorAll('.testimonial-item'),
   skillElements: document.querySelectorAll('.skill'),
-  newsletterModal: null,
-  newsletterForm: null,
-  newsletterSuccess: null,
-  closeNewsletter: null,
-  newsletterTimer: null
 };
 
 // ======================
@@ -552,146 +547,26 @@ const skills = {
   }
 };
 
-// ======================
-// Newsletter Functionality
-// ======================
-const newsletter = {
-  init: () => {
-    // Initialize newsletter elements
-    newsletter.createModal();
-    
-    elements.newsletterModal = document.getElementById('newsletterModal');
-    elements.newsletterForm = document.getElementById('newsletterForm');
-    elements.newsletterSuccess = document.querySelector('.newsletter-success');
-    elements.closeNewsletter = document.querySelector('.close-newsletter');
+// Newsletter Modal
+const newsletterModal = document.getElementById('newsletterModal');
+const closeNewsletter = document.querySelector('.close-newsletter');
 
-    // Set up event listeners
-    if (elements.closeNewsletter) {
-      elements.closeNewsletter.addEventListener('click', newsletter.closeModal);
-    }
+// Show modal after 5 seconds
+setTimeout(() => {
+  newsletterModal.style.display = 'flex';
+}, 5000);
 
-    if (elements.newsletterForm) {
-      elements.newsletterForm.addEventListener('submit', newsletter.handleSubmit);
-    }
+// Close modal
+closeNewsletter.addEventListener('click', () => {
+  newsletterModal.style.display = 'none';
+});
 
-    // Only show newsletter if user hasn't subscribed
-    if (!localStorage.getItem('newsletterSubscribed')) {
-      newsletter.startTimer();
-    }
-  },
-
-  createModal: () => {
-    const modalHTML = `
-      <div id="newsletterModal" class="newsletter-modal">
-        <div class="newsletter-content">
-          <button class="close-newsletter" aria-label="Close Newsletter">
-            <i class="fas fa-times"></i>
-          </button>
-          <div class="newsletter-header">
-            <h3>Stay Updated</h3>
-            <p>I write about tech, fitness, and I also analyze real-world events in real time.
-            Subscribe to get free updates.</p>
-          </div>
-          <form id="newsletterForm" class="newsletter-form">
-            <div class="form-group">
-              <input type="email" id="newsletterEmail" placeholder="Your best email" required>
-              <span class="error-message" id="newsletterError"></span>
-            </div>
-            <button type="submit" class="submit-btn btn-ripple">
-              <span class="btn-text">Subscribe</span>
-              <div class="spinner hidden"></div>
-            </button>
-          </form>
-          <div class="newsletter-success">
-            <i class="fas fa-check-circle"></i>
-            <span>Thanks for subscribing! You'll hear from me soon.</span>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-  },
-
-  startTimer: () => {
-    elements.newsletterTimer = setTimeout(() => {
-      newsletter.showModal();
-    }, 30000); // 30 seconds
-  },
-
-  showModal: () => {
-    if (elements.newsletterModal) {
-      elements.newsletterModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-  },
-
-  closeModal: () => {
-    if (elements.newsletterModal) {
-      elements.newsletterModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-  },
-
-  validateEmail: (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  },
-
-  handleSubmit: async function(e) {
-    e.preventDefault();
-    
-    const emailInput = this.querySelector('#newsletterEmail');
-    const errorElement = document.getElementById('newsletterError');
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const spinner = submitBtn.querySelector('.spinner');
-    
-    // Validate email
-    if (!newsletter.validateEmail(emailInput.value)) {
-      errorElement.textContent = 'Please enter a valid email address';
-      emailInput.classList.add('invalid');
-      return;
-    }
-    
-    // Show loading state
-    submitBtn.disabled = true;
-    btnText.textContent = 'Subscribing...';
-    spinner.classList.remove('hidden');
-    
-    try {
-      // Save to Firebase
-      await addDoc(collection(db, "newsletterSubscribers"), {
-        email: emailInput.value,
-        timestamp: new Date(),
-        source: "Portfolio Website"
-      });
-      
-      // Track the subscription
-      utils.trackEvent('Newsletter', 'subscribe', 'Modal');
-      
-      // Store in localStorage to prevent showing again
-      localStorage.setItem('newsletterSubscribed', 'true');
-      localStorage.setItem('subscriberEmail', emailInput.value);
-      
-      // Hide form and show success message
-      this.style.display = 'none';
-      elements.newsletterSuccess.style.display = 'flex';
-      
-      // Close modal after 5 seconds
-      setTimeout(() => {
-        newsletter.closeModal();
-      }, 5000);
-      
-    } catch (error) {
-      console.error("Error saving subscriber:", error);
-      errorElement.textContent = "Subscription failed. Please try again later.";
-    } finally {
-      submitBtn.disabled = false;
-      btnText.textContent = 'Subscribe';
-      spinner.classList.add('hidden');
-    }
+// Close when clicking outside
+newsletterModal.addEventListener('click', (e) => {
+  if (e.target === newsletterModal) {
+    newsletterModal.style.display = 'none';
   }
-};
+});
 
 // ======================
 // Initialize Everything
@@ -706,5 +581,5 @@ document.addEventListener('DOMContentLoaded', () => {
   videoBackground.init();
   testimonials.init();
   skills.init();
-  newsletter.init();
 });
+

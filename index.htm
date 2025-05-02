@@ -614,8 +614,10 @@
       </section>
     </main>
     <!--  -->
+
     <!-- empty -->
     <div class="empty"></div>
+
     <!-- Footer -->
     <footer>
       <div class="footer-content">
@@ -645,31 +647,17 @@
 
     <!-- Newsletter Modal -->
 <div id="newsletterModal" class="newsletter-modal">
-    <div class="newsletter-content">
-      <button class="close-newsletter" aria-label="Close Newsletter">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="newsletter-header">
-        <h3>Stay Updated!</h3>
-        <p>I write about tech, fitness, and I also analyze real-world events in real time.
-            Subscribe to get free updates.</p>
-      </div>
-      <form id="newsletterForm" class="newsletter-form">
-        <div class="form-group">
-          <input type="email" id="newsletterEmail" placeholder="Your best email" required>
-          <span class="error-message" id="newsletterError"></span>
-        </div>
-        <button type="submit" class="submit-btn btn-ripple">
-          <span class="btn-text">Subscribe</span>
-          <div class="spinner hidden"></div>
-        </button>
-      </form>
-      <div class="newsletter-success">
-        <i class="fas fa-check-circle"></i>
-        <span>Thanks for subscribing! You'll hear from me soon.</span>
-      </div>
-    </div>
+  <div class="newsletter-content">
+    <span class="close-newsletter">&times;</span>
+    <div class="newsletter-icon"></div>
+    <h3>Join My Newsletter</h3>
+    <p>Get updates on my latest projects, design tips, and exclusive content.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Your email address" required>
+      <button type="submit">Subscribe</button>
+    </form>
   </div>
+</div>
     
     <!-- Firebase SDKs -->
   <script src="script.js" type="module">
